@@ -15,7 +15,7 @@ router.get("/v1/health", (req,res) => {
             Object.assign(data, element.rows[0])
         }
 
-        res.json(JSON.stringify({pgsql: data}));
+        res.json({pgsql: data});
     });
 });
 
