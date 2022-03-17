@@ -2,11 +2,14 @@ const express = require("express");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const router = require("./routes.js");
+
+const routerV1 = require("./routesV1.js");
+const routerV2 = require("./routesV2.js");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use('', router)
+app.use('/v1', routerV1);
+app.use('/v2', routerV2);
 
 app.listen(PORT, ()=>{
     console.log("Server running.")
