@@ -180,7 +180,7 @@ router.get("/players/:player_id/abilities", (req, res) => {
                     LEFT JOIN ability_upgrades au ON mpd.id = au.match_player_detail_id
                     LEFT JOIN abilities ON au.ability_id = abilities.id
                     
-                    GROUP BY players.id, heroes.localized_name, matches.id, abilities.name HAVING players.id = ${id} ORDER BY matches.id ASC, upgrade_level ASC`, (err, result) => {
+                    GROUP BY players.id, heroes.localized_name, matches.id, abilities.name HAVING players.id = ${id} ORDER BY matches.id`, (err, result) => {
         if (err){
             throw err;
         }
