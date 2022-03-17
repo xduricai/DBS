@@ -55,7 +55,7 @@ router.get("/players/:player_id/game_exp", (req, res) => {
                     heroes.localized_name AS hero_localized_name, matches.id AS match_id, ROUND(matches.duration/60.00, 2) AS match_duration_minutes, 
                     mpd.experiences_gained, mpd.level AS level_gained,
                     CASE WHEN ((matches.radiant_win IS true AND mpd.player_slot >= 0 AND mpd.player_slot <= 4) 
-                    OR (matches.radiant_win IS false AND mpd.player_slot >= 128 AND mpd.player_slot <= 131)) THEN true ELSE false END AS winner
+                    OR (matches.radiant_win IS false AND mpd.player_slot >= 128 AND mpd.player_slot <= 132)) THEN true ELSE false END AS winner
                     FROM players, (
                         SELECT hero_id, 
                         match_id, COALESCE(xp_hero, 0) + COALESCE(xp_creep, 0) + COALESCE(xp_other, 0) + COALESCE(xp_roshan, 0) AS experiences_gained, 
