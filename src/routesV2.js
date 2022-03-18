@@ -92,7 +92,7 @@ router.get("/players/:player_id/game_exp", (req, res) => {
                         "match_duration_minutes": parseFloat(row.match_duration_minutes),
                         "experiences_gained": row.experiences_gained,
                         "level_gained": row.level_gained,
-                        "winner": true
+                        "winner": row.winner
                     }
                 );
             }
