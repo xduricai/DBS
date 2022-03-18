@@ -108,7 +108,8 @@ router.get("/players/:player_id/game_objectives", (req, res) => {
     let id = req.params.player_id;
 
     client.query(`SELECT players.id, COALESCE(nick, 'unknown') AS player_nick, 
-                    heroes.localized_name AS hero_localized_name, matches.id AS match_id, COALESCE(gobj.subtype, 'NO_ACTION') AS hero_action, COUNT(gobj.subtype)
+                    heroes.localized_name AS hero_localized_name, matches.id AS match_id, COALESCE(gobj.subtype, 'NO_ACTION') AS hero_action,
+                    CASE WHEN (gobj.subtype is null) THEN 1 ELSE COUNT(gobj.subtype) END AS count
                     FROM players, (SELECT id, hero_id, match_id FROM matches_players_details WHERE player_id = ${id}) AS mpd
                     LEFT JOIN heroes ON mpd.hero_id = heroes.id
                     LEFT JOIN matches ON mpd.match_id = matches.id
