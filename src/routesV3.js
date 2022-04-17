@@ -28,7 +28,7 @@ router.get("/matches/:match_id/top_purchases", (req,res) => {
         }
 
         let data = {
-            "id": id,
+            "id": parseInt(id),
             "heroes": []
         };
 
@@ -107,7 +107,7 @@ router.get("/abilities/:ability_id/usage", (req,res) => {
         }
 
         let data = {
-            "id": id,
+            "id": parseInt(id),
             "name": null,
             "heroes": []
         };
@@ -125,16 +125,16 @@ router.get("/abilities/:ability_id/usage", (req,res) => {
 
                     data.heroes.push({
                         "id": row.hero_id,
-                        "name": row.hero_name,
-                        "usage_winners": {},
-                        "usage_loosers": {}
+                        "name": row.hero_name
                     });
                 }
                 if(row.winner){
+                    data.heroes[count].usage_winners = {};
                     data.heroes[count].usage_winners.bucket = row.bucket;
                     data.heroes[count].usage_winners.count = row.count;
                 }
                 else{
+                    data.heroes[count].usage_loosers = {};
                     data.heroes[count].usage_loosers.bucket = row.bucket;
                     data.heroes[count].usage_loosers.count = row.count;
                 }
