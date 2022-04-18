@@ -165,7 +165,7 @@ router.get("/statistics/tower_kills", (req,res) => {
         ) AS kills
         JOIN heroes on kills.hero_id = heroes.id
         WHERE kills.tower_kills = kills.max
-        ORDER BY tower_kills DESC`, (err, result) => {
+        ORDER BY tower_kills DESC, name ASC`, (err, result) => {
 
         if (err){
             throw err;
