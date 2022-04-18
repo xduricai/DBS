@@ -147,4 +147,48 @@ router.get("/abilities/:ability_id/usage", (req,res) => {
     });
 });
 
+router.get("/statistics/tower_kills", (req,res) => {
+
+    client.query(`
+        SELECT DISTINCT kills.hero_id AS id, heroes.localized_name AS name, kills.tower_kills
+        FROM(
+            SELECT towers.mpdid, mpd.hero_id, COUNT(*) tower_kills, MAX(COUNT(*)) OVER (PARTITION BY mpd.hero_id)
+            FROM(
+                SELECT game_objectives.id, match_player_detail_id_1 AS mpdid, 
+                ROW_NUMBER() OVER (ORDER BY game_objectives.id) - ROW_NUMBER() OVER (PARTITION BY match_player_detail_id_1 ORDER BY game_objectives.id) AS rn
+                FROM game_objectives
+                WHERE subtype = 'CHAT_MESSAGE_TOWER_KILL' AND ((match_player_detail_id_1 IS NOT NULL) OR (match_player_detail_id_2 IS NOT NULL))
+            ) AS towers
+            JOIN matches_players_details mpd ON towers.mpdid = mpd.id  
+            GROUP BY towers.mpdid, mpd.hero_id, rn
+            ORDER BY tower_kills DESC
+        ) AS kills
+        JOIN heroes on kills.hero_id = heroes.id
+        WHERE kills.tower_kills = kills.max
+        ORDER BY tower_kills DESC`, (err, result) => {
+
+        if (err){
+            throw err;
+        }
+
+        let data = {
+            "heroes": []
+        };
+
+        if(result.rows[0] !== undefined){
+            for(let row of result.rows) {
+                data.heroes.push({
+                    "id": row.id,
+                    "name": row.name,
+                    "tower_kills": row.tower_kills
+                });
+            }
+        }
+
+        res.status(200);
+        res.type("application/json");
+        res.json(data);
+    });
+});
+
 module.exports = router;
