@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model abilities {
+  id               Int                @id(map: "abilities_pk")
+  name             String?
+  ability_upgrades ability_upgrades[]
+}
+
+model ability_upgrades {
+  id                      Int                      @id(map: "ability_upgrades_pk") @default(dbgenerated("nextval('ability_upgrades_id_seq'::regclass)"))
+  ability_id              Int?
+  match_player_detail_id  Int?
+  level                   Int?
+  time                    Int?
+  abilities               abilities?               @relation(fields: [ability_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ability_upgrades_abilities_id_fk")
+  matches_players_details matches_players_details? @relation(fields: [match_player_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "ability_upgrades_matches_players_details_id_fk")
+}
+
+model chats {
+  id                      Int                      @id(map: "chats_pk") @default(dbgenerated("nextval('chats_id_seq'::regclass)"))
+  match_player_detail_id  Int?
+  message                 String?
+  time                    Int?
+  nick                    String?
+  matches_players_details matches_players_details? @relation(fields: [match_player_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chats_matches_players_details_id_fk")
+}
+
+model cluster_regions {
+  id      Int       @id(map: "cluster_regions_pk")
+  name    String?
+  matches matches[]
+}
+
+model game_objectives {
+  id                                                                                        Int                      @id(map: "game_objectives_pk") @default(dbgenerated("nextval('game_objectives_id_seq'::regclass)"))
+  match_player_detail_id_1                                                                  Int?
+  match_player_detail_id_2                                                                  Int?
+  key                                                                                       Int?
+  subtype                                                                                   String?
+  team                                                                                      Int?
+  time                                                                                      Int?
+  value                                                                                     Int?
+  slot                                                                                      Int?
+  matches_players_details_game_objectives_match_player_detail_id_1Tomatches_players_details matches_players_details? @relation("game_objectives_match_player_detail_id_1Tomatches_players_details", fields: [match_player_detail_id_1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "game_objectives_matches_players_details_id_fk")
+  matches_players_details_game_objectives_match_player_detail_id_2Tomatches_players_details matches_players_details? @relation("game_objectives_match_player_detail_id_2Tomatches_players_details", fields: [match_player_detail_id_2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "game_objectives_matches_players_details_id_fk_2")
+}
+
+model heroes {
+  id                      Int                       @id(map: "heroes_pk")
+  name                    String?
+  localized_name          String?
+  matches_players_details matches_players_details[]
+}
+
+model items {
+  id                                                               Int                       @id(map: "items_pk")
+  name                                                             String?
+  matches_players_details_itemsTomatches_players_details_item_id_1 matches_players_details[] @relation("itemsTomatches_players_details_item_id_1")
+  matches_players_details_itemsTomatches_players_details_item_id_2 matches_players_details[] @relation("itemsTomatches_players_details_item_id_2")
+  matches_players_details_itemsTomatches_players_details_item_id_3 matches_players_details[] @relation("itemsTomatches_players_details_item_id_3")
+  matches_players_details_itemsTomatches_players_details_item_id_4 matches_players_details[] @relation("itemsTomatches_players_details_item_id_4")
+  matches_players_details_itemsTomatches_players_details_item_id_5 matches_players_details[] @relation("itemsTomatches_players_details_item_id_5")
+  matches_players_details_itemsTomatches_players_details_item_id_6 matches_players_details[] @relation("itemsTomatches_players_details_item_id_6")
+  purchase_logs                                                    purchase_logs[]
+}
+
+model matches {
+  id                      Int                       @id(map: "matches_pk")
+  cluster_region_id       Int?
+  start_time              Int?
+  duration                Int?
+  tower_status_radiant    Int?
+  tower_status_dire       Int?
+  barracks_status_radiant Int?
+  barracks_status_dire    Int?
+  first_blood_time        Int?
+  game_mode               Int?
+  radiant_win             Boolean?
+  negative_votes          Int?
+  positive_votes          Int?
+  cluster_regions         cluster_regions?          @relation(fields: [cluster_region_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_cluster_regions_id_fk")
+  matches_players_details matches_players_details[]
+  teamfights              teamfights[]
+}
+
+model matches_players_details {
+  id                                                                                Int                  @id(map: "matches_players_details_pk") @default(dbgenerated("nextval('matches_players_details_id_seq'::regclass)"))
+  match_id                                                                          Int?
+  player_id                                                                         Int?
+  hero_id                                                                           Int?
+  player_slot                                                                       Int?
+  gold                                                                              Int?
+  gold_spent                                                                        Int?
+  gold_per_min                                                                      Int?
+  xp_per_min                                                                        Int?
+  kills                                                                             Int?
+  deaths                                                                            Int?
+  assists                                                                           Int?
+  denies                                                                            Int?
+  last_hits                                                                         Int?
+  stuns                                                                             Int?
+  hero_damage                                                                       Int?
+  hero_healing                                                                      Int?
+  tower_damage                                                                      Int?
+  item_id_1                                                                         Int?
+  item_id_2                                                                         Int?
+  item_id_3                                                                         Int?
+  item_id_4                                                                         Int?
+  item_id_5                                                                         Int?
+  item_id_6                                                                         Int?
+  level                                                                             Int?
+  leaver_status                                                                     Int?
+  xp_hero                                                                           Int?
+  xp_creep                                                                          Int?
+  xp_roshan                                                                         Int?
+  xp_other                                                                          Int?
+  gold_other                                                                        Int?
+  gold_death                                                                        Int?
+  gold_buyback                                                                      Int?
+  gold_abandon                                                                      Int?
+  gold_sell                                                                         Int?
+  gold_destroying_structure                                                         Int?
+  gold_killing_heroes                                                               Int?
+  gold_killing_creeps                                                               Int?
+  gold_killing_roshan                                                               Int?
+  gold_killing_couriers                                                             Int?
+  heroes                                                                            heroes?              @relation(fields: [hero_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_heroes_id_fk")
+  items_itemsTomatches_players_details_item_id_1                                    items?               @relation("itemsTomatches_players_details_item_id_1", fields: [item_id_1], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_items_id_fk")
+  items_itemsTomatches_players_details_item_id_2                                    items?               @relation("itemsTomatches_players_details_item_id_2", fields: [item_id_2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_items_id_fk_2")
+  items_itemsTomatches_players_details_item_id_3                                    items?               @relation("itemsTomatches_players_details_item_id_3", fields: [item_id_3], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_items_id_fk_3")
+  items_itemsTomatches_players_details_item_id_4                                    items?               @relation("itemsTomatches_players_details_item_id_4", fields: [item_id_4], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_items_id_fk_4")
+  items_itemsTomatches_players_details_item_id_5                                    items?               @relation("itemsTomatches_players_details_item_id_5", fields: [item_id_5], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_items_id_fk_5")
+  items_itemsTomatches_players_details_item_id_6                                    items?               @relation("itemsTomatches_players_details_item_id_6", fields: [item_id_6], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_items_id_fk_6")
+  matches                                                                           matches?             @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_matches_id_fk")
+  players                                                                           players?             @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matches_players_details_players_id_fk")
+  ability_upgrades                                                                  ability_upgrades[]
+  chats                                                                             chats[]
+  game_objectives_game_objectives_match_player_detail_id_1Tomatches_players_details game_objectives[]    @relation("game_objectives_match_player_detail_id_1Tomatches_players_details")
+  game_objectives_game_objectives_match_player_detail_id_2Tomatches_players_details game_objectives[]    @relation("game_objectives_match_player_detail_id_2Tomatches_players_details")
+  player_actions                                                                    player_actions[]
+  player_times                                                                      player_times[]
+  purchase_logs                                                                     purchase_logs[]
+  teamfights_players                                                                teamfights_players[]
+
+  @@index([match_id, player_slot, id], map: "idx_match_id_player_id")
+}
+
+model patches {
+  id           Int      @id @default(dbgenerated("nextval('patches_id_seq'::regclass)"))
+  name         String
+  release_date DateTime @db.Timestamp(6)
+}
+
+model player_actions {
+  id                               Int                      @id(map: "player_actions_pk") @default(dbgenerated("nextval('player_actions_id_seq'::regclass)"))
+  unit_order_none                  Int?
+  unit_order_move_to_position      Int?
+  unit_order_move_to_target        Int?
+  unit_order_attack_move           Int?
+  unit_order_attack_target         Int?
+  unit_order_cast_position         Int?
+  unit_order_cast_target           Int?
+  unit_order_cast_target_tree      Int?
+  unit_order_cast_no_target        Int?
+  unit_order_cast_toggle           Int?
+  unit_order_hold_position         Int?
+  unit_order_train_ability         Int?
+  unit_order_drop_item             Int?
+  unit_order_give_item             Int?
+  unit_order_pickup_item           Int?
+  unit_order_pickup_rune           Int?
+  unit_order_purchase_item         Int?
+  unit_order_sell_item             Int?
+  unit_order_disassemble_item      Int?
+  unit_order_move_item             Int?
+  unit_order_cast_toggle_auto      Int?
+  unit_order_stop                  Int?
+  unit_order_buyback               Int?
+  unit_order_glyph                 Int?
+  unit_order_eject_item_from_stash Int?
+  unit_order_cast_rune             Int?
+  unit_order_ping_ability          Int?
+  unit_order_move_to_direction     Int?
+  match_player_detail_id           Int?
+  matches_players_details          matches_players_details? @relation(fields: [match_player_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "player_actions_matches_players_details_id_fk")
+}
+
+model player_ratings {
+  id              Int      @id(map: "player_ratings_pk") @default(dbgenerated("nextval('player_ratings_id_seq'::regclass)"))
+  player_id       Int?
+  total_wins      Int?
+  total_matches   Int?
+  trueskill_mu    Decimal? @db.Decimal
+  trueskill_sigma Decimal? @db.Decimal
+  players         players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "player_ratings_players_id_fk")
+}
+
+model player_times {
+  id                      Int                      @id(map: "player_times_pk") @default(dbgenerated("nextval('player_times_id_seq'::regclass)"))
+  match_player_detail_id  Int?
+  time                    Int?
+  gold                    Int?
+  lh                      Int?
+  xp                      Int?
+  matches_players_details matches_players_details? @relation(fields: [match_player_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "player_times_matches_players_details_id_fk")
+}
+
+model players {
+  id                      Int                       @id(map: "players_pk")
+  name                    String?
+  nick                    String?
+  matches_players_details matches_players_details[]
+  player_ratings          player_ratings[]
+}
+
+model purchase_logs {
+  id                      Int                      @id(map: "purchase_logs_pk") @default(dbgenerated("nextval('purchase_logs_id_seq'::regclass)"))
+  match_player_detail_id  Int?
+  item_id                 Int?
+  time                    Int?
+  items                   items?                   @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "purchase_logs_items_id_fk")
+  matches_players_details matches_players_details? @relation(fields: [match_player_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "purchase_logs_matches_players_details_id_fk")
+}
+
+model teamfights {
+  id                 Int                  @id(map: "teamfights_pk") @default(dbgenerated("nextval('teamfights_id_seq'::regclass)"))
+  match_id           Int?
+  start_teamfight    Int?
+  end_teamfight      Int?
+  last_death         Int?
+  deaths             Int?
+  matches            matches?             @relation(fields: [match_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "teamfights_matches_id_fk")
+  teamfights_players teamfights_players[]
+
+  @@index([match_id, start_teamfight, id])
+}
+
+model teamfights_players {
+  id                      Int                      @id(map: "teamfights_players_pk") @default(dbgenerated("nextval('teamfights_players_id_seq'::regclass)"))
+  teamfight_id            Int?
+  match_player_detail_id  Int?
+  buyback                 Int?
+  damage                  Int?
+  deaths                  Int?
+  gold_delta              Int?
+  xp_start                Int?
+  xp_end                  Int?
+  matches_players_details matches_players_details? @relation(fields: [match_player_detail_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "teamfights_players_matches_players_details_id_fk")
+  teamfights              teamfights?              @relation(fields: [teamfight_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "teamfights_players_teamfights_id_fk")
+}
+
+//enum entity_nums {
+  // 1 @map("1")
+  // 2 @map("2")
+//}
